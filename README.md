@@ -24,6 +24,7 @@ the ring and lattice hierarchy of abstraction, without recreating all of the
 operators. I wanted you to be able to write
 
 > type instance Multiplication Int = Mul
+
 > type instance Addition Int = Add
 
 and have the Ring instance be inferred for you based on the properties of Mul
