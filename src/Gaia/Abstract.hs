@@ -4,6 +4,7 @@
   , GADTs
   , RebindableSyntax
   , TypeInType
+  , UndecidableInstances
   , TypeFamilies 
   , MultiParamTypeClasses
   , ConstraintKinds 
@@ -11,7 +12,6 @@
   , RankNTypes
   , ScopedTypeVariables 
   , NoImplicitPrelude
-  , UndecidableInstances 
   , NoMonomorphismRestriction 
   , RoleAnnotations 
   , AllowAmbiguousTypes 
@@ -22,6 +22,8 @@ module Gaia.Abstract
   , Functor(..)
   , Applicative(..)
   , Monad(..)
+  , Foldable(..)
+  , Traversable(..), mapM
   , Logic
   , Equivalence(..)
   , Propositional(..)
@@ -77,7 +79,7 @@ class (
   ) => Functor f where
   type Dom f :: i -> i -> Type
   type Cod f :: j -> j -> Type
-  fmap :: Dom f a b -> Cod f (f a) (f b)
+  map :: Dom f a b -> Cod f (f a) (f b)
 
 class (
     Functor f
@@ -102,6 +104,21 @@ class (
   ) => Monad f where
   return :: Realm f a (f a)
   bind :: Realm f a (f b) -> Realm f (f a) (f b)
+
+class Endofunctor f => Foldable f where
+  fold :: Monoid m => Realm f (f m) m
+  foldMap :: Monoid m => Realm f a m -> Realm f (f a) m
+  foldr :: Realm f a (Realm f b b) -> Realm f b (Realm f (f a) b)
+  foldr' :: Realm f a (Realm f b b) -> Realm f b (Realm f (f a) b)
+  foldl :: Realm f b (Realm f a b) -> Realm f b (Realm f (f a) b)
+  foldl' :: Realm f b (Realm f a b) -> Realm f b (Realm f (f a) b)
+
+class Endofunctor f => Traversable f where
+  traverse :: Applicative g => Realm f a (g b) -> Realm f (f a) (g (f b))
+  sequence :: Applicative g => Realm f (f (g a)) (g (f a))
+
+mapM :: (Monad g, Applicative g, Traversable f) => Realm f a (g b) -> Realm f (f a) (g (f b))
+mapM = traverse
 
 -- | Type Indexed Logic
 -- 
@@ -369,6 +386,7 @@ bottom = bottom_
 type family Addition a
 type family Multiplication a
 
+
 class (
     Magma (Addition a)
   , Magma (Multiplication a)
@@ -376,15 +394,13 @@ class (
   , Coercible a (Addition a)
   , Coercible (Multiplication a) a
   , Coercible a (Multiplication a)
---  , a ~ (Addition a)
---  , a ~ Multiplication a
   ) => Distributive a where
   plus_ :: a -> a -> a
   plus_ a1 a2 = coerce (((coerce a1) :: Addition a) `mul` ((coerce a2) :: Addition a)) :: a
   times_ :: a -> a -> a
   times_ a1 a2 = coerce (((coerce a1) :: Multiplication a) `mul` ((coerce a2) :: Multiplication a)) :: a
 
-instance ( 
+instance (
     Magma (Addition a)
   , Magma (Multiplication a)
   , Coercible (Addition a) a
