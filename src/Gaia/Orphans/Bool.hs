@@ -5,7 +5,10 @@
   , FlexibleInstances 
   , MultiParamTypeClasses #-}
 
-module Gaia.Orphans.Bool where
+module Gaia.Orphans.Bool 
+  (
+    Bool(..)
+  )where
 
 import Gaia.Abstract
 import Data.Bool (Bool(..))

@@ -1,22 +1,3 @@
-{-# LANGUAGE
-    FlexibleInstances
-  , FlexibleContexts
-  , GADTs
-  , RebindableSyntax
-  , TypeInType
-  , UndecidableInstances
-  , TypeFamilies 
-  , MultiParamTypeClasses
-  , ConstraintKinds 
-  , TypeOperators  
-  , RankNTypes
-  , ScopedTypeVariables 
-  , NoImplicitPrelude
-  , NoMonomorphismRestriction 
-  , RoleAnnotations 
-  , AllowAmbiguousTypes 
-  , TypeFamilyDependencies #-}
-
 module Gaia.Abstract
   ( Hom(..)
   , Functor(..)
@@ -24,6 +5,7 @@ module Gaia.Abstract
   , Monad(..)
   , Foldable(..)
   , Traversable(..), mapM
+  , Then(..)
   , Logic
   , Equivalence(..)
   , Propositional(..)
@@ -48,7 +30,7 @@ module Gaia.Abstract
   , Distributive, Multiplication, Addition, (+), (*)
   , Semiring(..)
   , Ring(..)
-  , Division(..), (/)
+  , Division(..)
   , Field(..)
   , Module(..)
   , Semimodule(..)
@@ -72,7 +54,7 @@ class Hom (hom :: i -> i -> Type) where
 -- A Functor between two categories is the natural way
 -- to think about morphisms between categories themselves.
 --
--- fmap (g . f) = fmap f . fmap g
+-- map (g . f) = map f . map g
 class (
     Hom (Dom f)
   , Hom (Cod f)
@@ -119,6 +101,9 @@ class Endofunctor f => Traversable f where
 
 mapM :: (Monad g, Applicative g, Traversable f) => Realm f a (g b) -> Realm f (f a) (g (f b))
 mapM = traverse
+
+class Endofunctor m => Then m where
+  (>>) :: Realm f (m a) (Realm f (m b) (m b))
 
 -- | Type Indexed Logic
 -- 
@@ -272,9 +257,13 @@ instance Commutative a => Commutative (e -> a)
 -- @inv a <> a == neutral@
 class Neutral a => Invertible a where
   inv :: a -> a
+  inv a = cancel neutral a
+  cancel :: a -> a -> a
+  cancel a b = mul a (inv b)
 
 instance Invertible a => Invertible (e -> a) where
   inv f a = inv (f a)
+  cancel f g a = cancel (f a) (g a)
 
 -- | Idempotent
 --
@@ -345,7 +334,6 @@ instance Bounded a => Bounded (x -> a) where
 
 type family Join s
 type family Meet s
-
 
 class (
     Semilattice (Join s)
@@ -433,7 +421,9 @@ class (
   , Group (Addition a)
   , Commutative (Addition a)
   , Monoid (Multiplication a)
-  ) => Ring a
+  ) => Ring a where
+  (-) :: Ring a => a -> a -> a
+  a - b = coerce (((coerce a) :: Addition a ) `cancel` ((coerce b) :: Addition a))
 
 instance (
     Distributive a
