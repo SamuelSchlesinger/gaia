@@ -63,4 +63,7 @@ instance Semigroup Min
 
 instance Invertible Add where
   inv (Add a) = Add (negateInteger a)
-  (Add a) `cancel` (Add b) = Add (minusInteger a b)
+  -- (Add a) `cancel` (Add b) = Add (minusInteger a b)
+
+
+

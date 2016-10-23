@@ -1,3 +1,22 @@
+{-# LANGUAGE
+    FlexibleInstances
+  , FlexibleContexts
+  , GADTs
+  , RebindableSyntax
+  , TypeInType
+  , UndecidableInstances
+  , TypeFamilies 
+  , MultiParamTypeClasses
+  , ConstraintKinds 
+  , TypeOperators  
+  , RankNTypes
+  , ScopedTypeVariables 
+  , NoImplicitPrelude
+  , NoMonomorphismRestriction 
+  , RoleAnnotations 
+  , AllowAmbiguousTypes 
+  , TypeFamilyDependencies #-}
+
 module Gaia.Abstract
   ( Hom(..)
   , Functor(..)
@@ -5,7 +24,6 @@ module Gaia.Abstract
   , Monad(..)
   , Foldable(..)
   , Traversable(..), mapM
-  , Then(..)
   , Logic
   , Equivalence(..)
   , Propositional(..)
@@ -30,7 +48,7 @@ module Gaia.Abstract
   , Distributive, Multiplication, Addition, (+), (*)
   , Semiring(..)
   , Ring(..)
-  , Division(..)
+  , Division(..), (/)
   , Field(..)
   , Module(..)
   , Semimodule(..)
@@ -54,7 +72,7 @@ class Hom (hom :: i -> i -> Type) where
 -- A Functor between two categories is the natural way
 -- to think about morphisms between categories themselves.
 --
--- map (g . f) = map f . map g
+-- fmap (g . f) = fmap f . fmap g
 class (
     Hom (Dom f)
   , Hom (Cod f)
@@ -102,9 +120,6 @@ class Endofunctor f => Traversable f where
 mapM :: (Monad g, Applicative g, Traversable f) => Realm f a (g b) -> Realm f (f a) (g (f b))
 mapM = traverse
 
-class Endofunctor m => Then m where
-  (>>) :: Realm f (m a) (Realm f (m b) (m b))
-
 -- | Type Indexed Logic
 -- 
 -- With every type one uses, there generally is an
@@ -136,6 +151,7 @@ instance Conditional e x => Conditional (a -> e) (a -> x) where
 -- have a probabalistic system of logic and it might not
 -- obey these laws as strictly as you might imagine.
 class Equivalence e where
+  infixr 6 ==
   (==) :: e -> e -> Logic e
 
 instance Equivalence e => Equivalence (a -> e) where
@@ -213,6 +229,8 @@ instance Magma a => Magma (e -> a) where
 -- yours, in that generic algorithms will not work as advertised for you if you do 
 -- not obey the law.
 class Magma a => Semigroup a
+
+infixr 7 <>
 (<>) :: Semigroup a => a -> a -> a
 (<>) = mul
 
@@ -257,13 +275,9 @@ instance Commutative a => Commutative (e -> a)
 -- @inv a <> a == neutral@
 class Neutral a => Invertible a where
   inv :: a -> a
-  inv a = cancel neutral a
-  cancel :: a -> a -> a
-  cancel a b = mul a (inv b)
 
 instance Invertible a => Invertible (e -> a) where
   inv f a = inv (f a)
-  cancel f g a = cancel (f a) (g a)
 
 -- | Idempotent
 --
@@ -279,6 +293,7 @@ instance Idempotent a => Idempotent (e -> a)
 class    (Semigroup a, Neutral a) => Monoid a
 instance (Semigroup a, Neutral a) => Monoid a
 
+infixr 8 ++
 {-# INLINE (++) #-}
 (++) :: Monoid a => a -> a -> a
 (++) = mul
@@ -298,6 +313,7 @@ class    (Monoid a, Invertible a) => Group a
 instance (Monoid a, Invertible a) => Group a
 instance Group a => Group (e -> a)
 
+infixr 6 &
 {-# INLINE (&) #-}
 (&) :: Group a => a -> a -> a
 (&) = mul
@@ -334,6 +350,7 @@ instance Bounded a => Bounded (x -> a) where
 
 type family Join s
 type family Meet s
+
 
 class (
     Semilattice (Join s)
@@ -397,9 +414,11 @@ instance (
   , Coercible a (Multiplication a)
   ) => Distributive a
 
+infixr 7 +
 (+) :: Distributive a => a -> a -> a
 (+) = plus_
 
+infixr 7 *
 (*) :: Distributive a => a -> a -> a
 (*) = times_
 
@@ -421,9 +440,7 @@ class (
   , Group (Addition a)
   , Commutative (Addition a)
   , Monoid (Multiplication a)
-  ) => Ring a where
-  (-) :: Ring a => a -> a -> a
-  a - b = coerce (((coerce a) :: Addition a ) `cancel` ((coerce b) :: Addition a))
+  ) => Ring a
 
 instance (
     Distributive a
@@ -441,6 +458,7 @@ class (
   , Commutative m
   ) => Premodule r m
 
+infixr 8 .*
 (.*) :: Premodule r m => r -> m -> m
 r .* m = act r m 
 
@@ -466,6 +484,7 @@ class (
   {-# INLINE divide_ #-}
   divide_ a b = coerce (((coerce a) :: (Multiplication a)) `mul` inv ((coerce b) :: (Multiplication a)))
 
+infixr 7 /
 {-# INLINE (/) #-}
 (/) :: Division a => a -> a -> a
 (/) = divide_

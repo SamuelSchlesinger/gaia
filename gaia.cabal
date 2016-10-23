@@ -15,9 +15,99 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Gaia.Abstract, Gaia.Orphans.Bool
-  build-depends:       base >= 4.7 && < 5
+  exposed-modules:     Gaia.Abstract,
+                       Gaia.Orphans.Bool,
+                       Gaia.Orphans.Integer
+  build-depends:       base >= 4.7 && < 5,
+                       integer-gmp
   default-language:    Haskell2010
+  default-extensions:
+    NoImplicitPrelude,
+    UnicodeSyntax,
+    BangPatterns,
+    BinaryLiterals,
+    DeriveFoldable,
+    DeriveFunctor,
+    DeriveGeneric,
+    DeriveTraversable,
+    DisambiguateRecordFields,
+    EmptyCase,
+    FlexibleContexts,
+    FlexibleInstances,
+    FunctionalDependencies,
+    GADTSyntax,
+    InstanceSigs,
+    KindSignatures,
+    LambdaCase,
+    MonadComprehensions,
+    MultiParamTypeClasses,
+    MultiWayIf,
+    NegativeLiterals,
+    OverloadedStrings,
+    ParallelListComp,
+    PartialTypeSignatures,
+    PatternSynonyms,
+    RankNTypes,
+    RecordWildCards,
+    RecursiveDo,
+    ScopedTypeVariables,
+    TupleSections,
+    TypeFamilies,
+    TypeOperators
+
+test-suite test
+  default-language:
+    Haskell2010
+  type:
+    exitcode-stdio-1.0
+  hs-source-dirs:
+    test
+  main-is:
+    test.hs
+  build-depends:
+    base >= 4.7 && < 5,
+    protolude,
+    tasty,
+    HUnit,
+    tasty-hunit,
+    smallcheck,
+    tasty-smallcheck,
+    QuickCheck,
+    tasty-quickcheck,
+    gaia
+  default-extensions:
+    NoImplicitPrelude,
+    UnicodeSyntax,
+    BangPatterns,
+    BinaryLiterals,
+    DeriveFoldable,
+    DeriveFunctor,
+    DeriveGeneric,
+    DeriveTraversable,
+    DisambiguateRecordFields,
+    EmptyCase,
+    FlexibleContexts,
+    FlexibleInstances,
+    FunctionalDependencies,
+    GADTSyntax,
+    InstanceSigs,
+    KindSignatures,
+    LambdaCase,
+    MonadComprehensions,
+    MultiParamTypeClasses,
+    MultiWayIf,
+    NegativeLiterals,
+    OverloadedStrings,
+    ParallelListComp,
+    PartialTypeSignatures,
+    PatternSynonyms,
+    RankNTypes,
+    RecordWildCards,
+    RecursiveDo,
+    ScopedTypeVariables,
+    TupleSections,
+    TypeFamilies,
+    TypeOperators
 
 source-repository head
   type:     git
