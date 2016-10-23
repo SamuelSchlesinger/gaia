@@ -2,6 +2,10 @@ module Gaia.Orphans.Integer
   (
     Integer
   , FromInteger(..)
+  , Add(..)
+  , Mul(..)
+  , Min(..)
+  , Max(..)
   ) where
 
 import GHC.Integer
