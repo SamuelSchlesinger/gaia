@@ -2,26 +2,26 @@
 
 module Main where
 
-import Protolude hiding ((+),(-),(*),(/),zero,one,negate,div,mod,rem,quot, Integral(..), Semiring(..), (==), Integer, Bool(..),(<>), Semigroup, empty)
--- import qualified Protolude as P
+import Protolude hiding ((+),(-),(*),(/),zero,one,negate,div,mod,rem,quot, Integral(..), Semiring(..), Bool(..),(<>), Semigroup, empty)
+
 import Test.Tasty (TestName, TestTree, testGroup, defaultMain)
 import Test.Tasty.QuickCheck
-import Gaia.Abstract
--- import Gaia.Orphans.Bool
-import Gaia.Orphans.Integer
+
+import Math.Gaia
+import Math.Gaia.Integer()
+import Math.Gaia.Bool
 
 data LawArity a =
-    Unary (a -> Logic a) |
-    Binary (a -> a -> Logic a) |
-    Ternary (a -> a -> a -> Logic a) |
-    Ornary (a -> a -> a -> a -> Logic a)
+    Unary (a -> Bool) |
+    Binary (a -> a -> Bool) |
+    Ternary (a -> a -> a -> Bool) |
+    Ornary (a -> a -> a -> a -> Bool)
 
 type Law a = (TestName, (LawArity a))
  
 testLawOf  ::
     ( Arbitrary a
     , Show a
-    , Testable (Logic a)
     ) =>
     [a] -> Law a -> TestTree
 testLawOf _ (name, Unary f) = testProperty name f
@@ -38,15 +38,9 @@ main :: IO ()
 main = defaultMain tests
 
 laws ::
-    ( Equivalence a
-    , Neutral (Addition a)
-    , Magma (Multiplication a)
-    , Coercible (Addition a) a
-    , Coercible a (Addition a)
-    , Coercible (Multiplication a) a
-    , Coercible a (Multiplication a)
+    ( Eq a
     , Num a
-    -- , Distributive a
+    , Distributive a
     ) =>
     [Law a]
 laws =

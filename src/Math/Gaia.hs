@@ -95,15 +95,19 @@ class Distributive a => IntegralDomain a where
   div :: a -> a -> a
   mod :: a -> a -> a
 
+infixr 7 *
 (*) :: Distributive a => a -> a -> a
 (x :: a) * y = coerce ((coerce x `mul` coerce y) :: Mul a) :: a
 
+infixr 6 +
 (+) :: Distributive a => a -> a -> a
 (x :: a) + y = coerce ((coerce x `mul` coerce y) :: Add a) :: a
 
+infixr 6 -
 (-) :: Ring a => a -> a -> a
 (x :: a) - y = coerce ((coerce x `mul` inv (coerce y)) :: Add a) :: a
 
+infixr 7 /
 (/) :: Division a => a -> a -> a
 (x :: a) / y = coerce ((coerce x `mul` inv (coerce y)) :: Mul a) :: a
 

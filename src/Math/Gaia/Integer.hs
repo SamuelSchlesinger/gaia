@@ -3,8 +3,8 @@
 module Math.Gaia.Integer where
 
 import Math.Gaia
-import Prelude (Integer(..), ($), (>), (<), (>=), (<=), (==))
-import qualified Prelude as P
+import Protolude (Integer(..), ($), (>), (<), (>=), (<=), (==))
+import qualified Protolude as P
 
 newtype AddInteger = AddInteger Integer
 newtype MulInteger = MulInteger Integer
