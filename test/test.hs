@@ -39,6 +39,7 @@ main = defaultMain tests
 
 laws ::
     ( Equivalence a
+    , Commutative (Addition a)
     , Neutral (Addition a)
     , Magma (Multiplication a)
     , Coercible (Addition a) a

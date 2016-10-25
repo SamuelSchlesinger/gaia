@@ -40,15 +40,19 @@ module Gaia.Abstract
   , Invertible(..)
   , Neutral(..)
   , Monoid(..), (++), empty
-  , Group(..), identity
+  , Group(..)
+  , Multiplication, Addition
+  , Plus(..), (+)
+  , Minus(..), (-), negate
+  , Times(..), (*)
+  , Divide(..), (/)
   , Idempotent(..)
   , Band(..)
   , Semilattice(..)
   , Lattice, Join, Meet, (/\), (\/)
-  , Distributive, Multiplication, Addition, (+), (*)
+  , Distributive
   , Semiring(..)
   , Ring(..)
-  , Division(..), (/)
   , Field(..)
   , Module(..)
   , Semimodule(..)
@@ -322,6 +326,98 @@ infixr 6 &
 identity :: Group a => a
 identity = neutral
 
+type family Addition a
+type family Multiplication a
+
+class (
+    Magma (Addition a)
+  , Commutative (Addition a)
+  , Coercible (Addition a) a
+  , Coercible a (Addition a)
+  ) => Plus a where
+  plus_ :: a -> a -> a
+  plus_ a1 a2 = coerce (((coerce a1) :: Addition a) `mul` ((coerce a2) :: Addition a)) :: a
+
+instance (
+    Magma (Addition a)
+  , Commutative (Addition a)
+  , Coercible (Addition a) a
+  , Coercible a (Addition a)
+  ) => Plus a
+
+infixr 6 +
+(+) :: Plus a => a -> a -> a
+(+) = plus_
+
+class (
+    Magma (Addition a)
+  , Plus (Addition a)
+  , Invertible (Addition a)
+  , Coercible (Addition a) a
+  , Coercible a (Addition a)
+  ) => Minus a where
+  minus_ :: a -> a -> a
+  minus_ a1 a2 = coerce (((coerce a1) :: Addition a) `mul` inv ((coerce a2) :: Addition a)) :: a
+  negate_ :: a -> a
+  negate_ a = coerce (inv (((coerce a) :: Addition a))) :: a
+
+instance (
+    Magma (Addition a)
+  , Plus (Addition a)
+  , Invertible (Addition a)
+  , Coercible (Addition a) a
+  , Coercible a (Addition a)
+  ) => Minus a
+
+infixr 6 -
+{-# INLINE (-) #-}
+(-) :: (Minus a) => a -> a -> a
+(-) = minus_
+
+{-# INLINE negate #-}
+negate :: Minus a => a -> a
+negate = negate_
+
+class (
+    Magma (Multiplication a)
+  , Coercible (Multiplication a) a
+  , Coercible a (Multiplication a)
+  ) => Times a where
+  times_ :: a -> a -> a
+  times_ a1 a2 = coerce (((coerce a1) :: Multiplication a) `mul` ((coerce a2) :: Multiplication a)) :: a
+
+instance (
+    Magma (Multiplication a)
+  , Coercible (Multiplication a) a
+  , Coercible a (Multiplication a)
+  ) => Times a
+
+infixr 7 *
+(*) :: Times a => a -> a -> a
+(*) = times_
+
+class (
+    Magma (Multiplication a)
+  , Invertible (Multiplication a)
+  , Coercible (Multiplication a) a
+  , Coercible a (Multiplication a)
+  ) => Divide a where
+  divide_ :: a -> a -> a
+  {-# INLINE divide_ #-}
+  divide_ a b = coerce (((coerce a) :: (Multiplication a)) `mul` inv ((coerce b) :: (Multiplication a)))
+
+infixr 7 /
+{-# INLINE (/) #-}
+(/) :: Divide a => a -> a -> a
+(/) = divide_
+
+instance (
+    Magma (Multiplication a)
+  , Invertible (Multiplication a)
+  , Coercible (Multiplication a) a
+  , Coercible a (Multiplication a)
+  ) => Divide a
+
 class (
     Idempotent s
   , Semigroup s
@@ -350,7 +446,6 @@ instance Bounded a => Bounded (x -> a) where
 
 type family Join s
 type family Meet s
-
 
 class (
     Semilattice (Join s)
@@ -388,39 +483,15 @@ top = top_
 bottom :: (Lattice s, Bounded (Meet s)) => s
 bottom = bottom_
 
-type family Addition a
-type family Multiplication a
-
-
 class (
-    Magma (Addition a)
-  , Magma (Multiplication a)
-  , Coercible (Addition a) a
-  , Coercible a (Addition a)
-  , Coercible (Multiplication a) a
-  , Coercible a (Multiplication a)
-  ) => Distributive a where
-  plus_ :: a -> a -> a
-  plus_ a1 a2 = coerce (((coerce a1) :: Addition a) `mul` ((coerce a2) :: Addition a)) :: a
-  times_ :: a -> a -> a
-  times_ a1 a2 = coerce (((coerce a1) :: Multiplication a) `mul` ((coerce a2) :: Multiplication a)) :: a
-
-instance (
-    Magma (Addition a)
-  , Magma (Multiplication a)
-  , Coercible (Addition a) a
-  , Coercible a (Addition a)
-  , Coercible (Multiplication a) a
-  , Coercible a (Multiplication a)
+    Plus (Addition a)
+  , Times (Multiplication a)
   ) => Distributive a
 
-infixr 6 +
-(+) :: Distributive a => a -> a -> a
-(+) = plus_
-
-infixr 7 *
-(*) :: Distributive a => a -> a -> a
-(*) = times_
+instance (
+    Plus (Addition a)
+  , Times (Multiplication a)
+  ) => Distributive a
 
 class (
     Distributive a 
@@ -477,29 +548,11 @@ class (
   ) => Module r m
 
 class (
-    Ring a
-  , Group (Multiplication a)
-  ) => Division a where
-  divide_ :: a -> a -> a
-  {-# INLINE divide_ #-}
-  divide_ a b = coerce (((coerce a) :: (Multiplication a)) `mul` inv ((coerce b) :: (Multiplication a)))
-
-infixr 7 /
-{-# INLINE (/) #-}
-(/) :: Division a => a -> a -> a
-(/) = divide_
-
-instance (
-    Ring a
-  , Group (Multiplication a)
-  ) => Division a
-
-class (
-    Division a
+    Divide a
   , Commutative (Multiplication a)
   ) => Field a
 
 instance (
-    Division a
+    Divide a
   , Commutative (Multiplication a)
   ) => Field a
