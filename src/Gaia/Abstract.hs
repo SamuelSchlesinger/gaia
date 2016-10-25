@@ -151,7 +151,7 @@ instance Conditional e x => Conditional (a -> e) (a -> x) where
 -- have a probabalistic system of logic and it might not
 -- obey these laws as strictly as you might imagine.
 class Equivalence e where
-  infixr 6 ==
+  infixr 4 ==
   (==) :: e -> e -> Logic e
 
 instance Equivalence e => Equivalence (a -> e) where
@@ -230,7 +230,7 @@ instance Magma a => Magma (e -> a) where
 -- not obey the law.
 class Magma a => Semigroup a
 
-infixr 7 <>
+infixr 6 <>
 (<>) :: Semigroup a => a -> a -> a
 (<>) = mul
 
@@ -293,7 +293,7 @@ instance Idempotent a => Idempotent (e -> a)
 class    (Semigroup a, Neutral a) => Monoid a
 instance (Semigroup a, Neutral a) => Monoid a
 
-infixr 8 ++
+infixr 6 ++
 {-# INLINE (++) #-}
 (++) :: Monoid a => a -> a -> a
 (++) = mul
@@ -414,7 +414,7 @@ instance (
   , Coercible a (Multiplication a)
   ) => Distributive a
 
-infixr 7 +
+infixr 6 +
 (+) :: Distributive a => a -> a -> a
 (+) = plus_
 
@@ -458,7 +458,7 @@ class (
   , Commutative m
   ) => Premodule r m
 
-infixr 8 .*
+infixr 7 .*
 (.*) :: Premodule r m => r -> m -> m
 r .* m = act r m 
 
