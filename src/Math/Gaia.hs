@@ -144,3 +144,43 @@ type Negated s = (Lattice s, Homomorphic (Inf s) (Sup s))
 
 negate :: Negated s => s -> s
 negate (a :: s) = coerce (hom (coerce a :: Inf s) :: Sup s) :: s
+
+-- | A Premodule is simply the Constraints
+--   listed below.
+class (
+    Distributive m
+  , Semiring r
+  , Homomorphic r m
+  , Semigroup m
+  , Commutative m
+  ) => Premodule r m
+
+infixr 6 .+
+(.+) :: Premodule r m => r -> m -> m
+r .+ m = hom r + m 
+
+infixr 7 .*
+(.*) :: Premodule r m => r -> m -> m
+r .* m = hom r * m 
+
+infixr 6 .-
+(.-) :: (Premodule r m, Commutative (Add m), Invertible (Add m)) => r -> m -> m
+r .- m = hom r - m 
+
+infixr 7 ./
+(./) :: (Premodule r m, Commutative (Mul m), Invertible (Mul m), Commutative (Add m), Invertible (Add m)) => r -> m -> m
+r ./ m = hom r / m 
+
+-- | A Semimodule is a Premodule where the action is distributive 
+class (
+    Premodule r m
+  , Monoid m
+  , Semiring r
+  ) => Semimodule r m
+
+-- A Module is a Semimodule where m is a group and r is a ring
+class (
+    Ring r
+  , Group m
+  , Semimodule r m
+  ) => Module r m

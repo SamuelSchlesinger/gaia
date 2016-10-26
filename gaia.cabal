@@ -21,7 +21,6 @@ library
                        Math.Gaia.Finite
                        
   build-depends:       base >= 4.7 && < 5,
-                       integer-gmp,
                        protolude
   default-language:    Haskell2010
   default-extensions:

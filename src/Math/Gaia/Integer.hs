@@ -30,6 +30,9 @@ instance Unital AddInteger where
 instance Unital MulInteger where
   unit = MulInteger 1
 
+instance Homomorphic AddInteger AddInteger where
+  hom x = x
+
 instance Invertible AddInteger where
   inv (AddInteger a) = AddInteger $ P.negate a
 
