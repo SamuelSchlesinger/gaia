@@ -11,6 +11,9 @@ import Math.Gaia
 import Math.Gaia.Integer()
 import Math.Gaia.Float()
 import Math.Gaia.Bool()
+import Math.Gaia.Vector
+import Data.Vector.Unboxed
+
 
 data LawArity a =
     Unary (a -> Bool) |
@@ -19,7 +22,9 @@ data LawArity a =
     Ornary (a -> a -> a -> a -> Bool)
 
 type Law a = (TestName, (LawArity a))
- 
+
+instance (Arbitrary a) => Arbitrary (Vector a)
+
 testLawOf  ::
     ( Arbitrary a
     , Show a
@@ -30,10 +35,14 @@ testLawOf _ (name, Binary f) = testProperty name f
 testLawOf _ (name, Ternary f) = testProperty name f
 testLawOf _ (name, Ornary f) = testProperty name f
 
+-- instance Unbox Integer
+
 tests :: TestTree
 tests = testGroup "everything" $
     [ testGroup "Integer" $ testLawOf ([]::[Integer]) <$> laws
     , testGroup "Float" $ testLawOf ([]::[Float]) <$> laws'
+    , testGroup "Vector Float" $ testLawOf ([]::[Vector Float]) <$> lawsVector
+    -- , testGroup "Vector Integer" $ testLawOf ([]::[Vector Integer]) <$> lawsVector
     ]
 
 main :: IO ()
@@ -91,3 +100,29 @@ laws' =
     , ("right minus1: (a + b) - b = a", Binary (\a b -> (a + b) - b == a))
     , ("right minus2: a + (b - b) = a", Binary (\a b -> a + (b - b) == a))
     ]
+
+
+lawsVector ::
+    ( Eq a
+    , Distributive a
+    -- , Invertible (Add a)
+    -- , Commutative (Add a)
+    ) =>
+    [Law a]
+lawsVector =
+    [ ("associative: a + (b + c) == (a + b) + c", Ternary (\a b c -> a + (b + c) == (a + b) + c))
+    , ("left zero: zero + a = a", Unary (\a -> zero + a == a))
+    , ("right zero: a + zero = a", Unary (\a -> a + zero == a))
+    , ("left one: one * a == a", Unary (\a -> one * a == a))
+    , ("right one: a * one == a", Unary (\a -> a * one == a))
+    , ("commutative: a + b == b + a", Binary (\a b -> a + b == b + a))
+    , ("commutative: a * b == b * a", Binary (\a b -> a * b == b * a))
+    , ("associative: (a * b) * c == a * (b * c)", Ternary (\a b c -> (a * b) * c == a * (b * c)))
+    , ("left annihilative: a * zero == zero", Unary (\a -> a * zero == zero))
+    , ("right annihilative: zero * a == zero", Unary (\a -> zero * a == zero))
+    , ("left distributive: a * (b + c) == a * b + a * c", Ternary (\a b c -> a * (b + c) == a * b + a * c))
+    , ("right distributive: (a + b) * c == a * c + b * c", Ternary (\a b c -> (a + b) * c == a * c + b * c))
+    -- , ("right minus1: (a + b) - b = a", Binary (\a b -> (a + b) - b == a))
+    -- , ("right minus2: a + (b - b) = a", Binary (\a b -> a + (b - b) == a))
+    ]
+

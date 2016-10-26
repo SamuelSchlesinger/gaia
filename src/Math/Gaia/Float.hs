@@ -33,6 +33,9 @@ instance Homomorphic AddFloat AddFloat where
 instance Invertible AddFloat where
   inv (AddFloat a) = AddFloat $ P.negate a
 
+instance Invertible MulFloat where
+  inv (MulFloat a) = MulFloat $ P.recip a
+
 instance Distributive Float where
   type Add Float = AddFloat
   type Mul Float = MulFloat
