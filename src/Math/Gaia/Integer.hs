@@ -3,8 +3,8 @@
 module Math.Gaia.Integer where
 
 import Math.Gaia
-import Prelude (Integer(..), ($), (>), (<), (>=), (<=), (==))
-import qualified Prelude as P
+import Protolude (Integer(..), ($), (>), (<), (>=), (<=), (==))
+import qualified Protolude as P
 
 newtype AddInteger = AddInteger Integer
 newtype MulInteger = MulInteger Integer
@@ -29,6 +29,9 @@ instance Unital AddInteger where
 
 instance Unital MulInteger where
   unit = MulInteger 1
+
+instance Homomorphic AddInteger AddInteger where
+  hom x = x
 
 instance Invertible AddInteger where
   inv (AddInteger a) = AddInteger $ P.negate a

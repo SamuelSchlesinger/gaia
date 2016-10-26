@@ -1,7 +1,7 @@
 > {-# LANGUAGE OverloadedStrings #-}
 > import Protolude hiding ((+), (-), (*), (/))
-> import Gaia.Abstract hiding ((<>))
-> import Gaia.Orphans.Integer
+> import Math.Gaia hiding ((<>))
+> import Math.Gaia.Integer
 
 > x :: Integer
 > x = 1+1

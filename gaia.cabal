@@ -15,11 +15,13 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Gaia.Abstract,
-                       Gaia.Orphans.Bool,
-                       Gaia.Orphans.Integer
+  exposed-modules:     Math.Gaia,
+                       Math.Gaia.Integer,
+                       Math.Gaia.Bool,
+                       Math.Gaia.Finite
+                       
   build-depends:       base >= 4.7 && < 5,
-                       integer-gmp
+                       protolude
   default-language:    Haskell2010
   default-extensions:
     NoImplicitPrelude,
