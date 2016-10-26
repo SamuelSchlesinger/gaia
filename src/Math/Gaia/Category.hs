@@ -17,6 +17,11 @@
 module Math.Gaia.Category 
   (
     Hom(..)
+  , Quiver(..)
+  , Category(..)
+  , Groupoid(..)
+  , Monoidal(..)
+  , Arrow(..)
   ) where
 
 import Data.Kind
