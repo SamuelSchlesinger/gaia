@@ -108,6 +108,7 @@ type family If (c :: Bool) (a :: k) (b :: k) :: k where
   If True a b = a
   If False a b = b
 
+-- | This doesn't work for small numbers or something
 type family IsPrime (n :: Nat) (m :: Nat) (k :: Nat) :: Bool where
   IsPrime n 1 k = True
   IsPrime n m 1 = IsPrime n (m - 1) (m - 2)

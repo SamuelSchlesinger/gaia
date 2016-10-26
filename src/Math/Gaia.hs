@@ -1,4 +1,4 @@
-{-# LANGUAGE ConstraintKinds, NoImplicitPrelude, TypeFamilies, FlexibleContexts, MultiParamTypeClasses, ScopedTypeVariables, FlexibleInstances, LiberalTypeSynonyms #-}
+{-# LANGUAGE ConstraintKinds, NoImplicitPrelude, TypeFamilies, FlexibleContexts, MultiParamTypeClasses, ScopedTypeVariables, FlexibleInstances, LiberalTypeSynonyms, FunctionalDependencies #-}
 {-# OPTIONS_GHC -O3 #-}
 module Math.Gaia
   (
@@ -153,13 +153,17 @@ ord2pord GT = PGT
 
 -- | A Premodule is simply the Constraints
 --   listed below.
+type Premodule r m = (Distributive m, Semiring r, Homomorphic r m, Semigroup m, Commutative m)
+
+-- | A Semimodule is a Premodule where the action is distributive 
 class (
-    Distributive m
+    Premodule r m
+  , Monoid m
   , Semiring r
-  , Homomorphic r m
-  , Semigroup m
-  , Commutative m
-  ) => Premodule r m
+  ) => Semimodule r m
+
+-- A Module is a Semimodule where m is a group and r is a ring
+type Module r m = (Ring r, Group m, Semimodule r m)
 
 infixr 6 .+
 (.+) :: Premodule r m => r -> m -> m
@@ -177,16 +181,17 @@ infixr 7 ./
 (./) :: (Premodule r m, Commutative (Mul m), Invertible (Mul m), Commutative (Add m), Invertible (Add m)) => r -> m -> m
 r ./ m = hom r / m 
 
--- | A Semimodule is a Premodule where the action is distributive 
-class (
-    Premodule r m
-  , Monoid m
-  , Semiring r
-  ) => Semimodule r m
+class Module r m => Vector r m | m -> r where
+  basis :: [m]
 
--- A Module is a Semimodule where m is a group and r is a ring
+class Metric r m where
+  d :: m -> m -> r
+
 class (
-    Ring r
-  , Group m
-  , Semimodule r m
-  ) => Module r m
+    Metric r m
+  , Vector r m
+  ) => Normed r m where
+  norm :: m -> r
+
+class Normed r m => Inner r m where
+  (<.>) :: m -> m -> r
