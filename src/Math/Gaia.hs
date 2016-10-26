@@ -1,5 +1,5 @@
 {-# LANGUAGE ConstraintKinds, NoImplicitPrelude, TypeFamilies, FlexibleContexts, MultiParamTypeClasses, ScopedTypeVariables, FlexibleInstances, LiberalTypeSynonyms #-}
-
+{-# OPTIONS_GHC -O3 #-}
 module Math.Gaia
   (
     Magma(..)
@@ -32,6 +32,7 @@ module Math.Gaia
   , exp
   , POrdering(..)
   , POrd(..)
+  , ord2pord
   , Topped(..)
   , Bottomed(..)
   , PBounded(..)
@@ -144,6 +145,11 @@ type Negated s = (Lattice s, Homomorphic (Inf s) (Sup s))
 
 negate :: Negated s => s -> s
 negate (a :: s) = coerce (hom (coerce a :: Inf s) :: Sup s) :: s
+
+ord2pord :: Ordering -> POrdering
+ord2pord EQ = PEQ
+ord2pord LT = PLT
+ord2pord GT = PGT
 
 -- | A Premodule is simply the Constraints
 --   listed below.
