@@ -15,7 +15,8 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Math.Gaia,
+  exposed-modules:     Gaia.Prelude,
+                       Math.Gaia,
                        Math.Gaia.Integer,
                        Math.Gaia.Float,
                        Math.Gaia.Bool,
