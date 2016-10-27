@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
-module Gaia.Prelude (module X) where
+
+module Math.Gaia.Prelude (module X) where
 
 import Protolude as X hiding
     ( Semiring(..)
@@ -33,9 +34,9 @@ import Math.Gaia.Integer as X
 import Math.Gaia.Float as X
 import Math.Gaia.Double as X
 -- TODO
---import Math.Gaia.Vector as X
+-- import Math.Gaia.Vector as X
 import Math.Gaia.Bool as X
 import Math.Gaia.Finite as X
 -- Not fit for consumption by public
---import Math.Gaia.Category as X
+-- import Math.Gaia.Category as X
 
