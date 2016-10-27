@@ -17,7 +17,9 @@ library
   hs-source-dirs:      src
   exposed-modules:     Gaia.Prelude,
                        Math.Gaia,
+                       Math.Gaia.Int,
                        Math.Gaia.Integer,
+                       Math.Gaia.Double,
                        Math.Gaia.Float,
                        Math.Gaia.Bool,
                        Math.Gaia.Finite,  
