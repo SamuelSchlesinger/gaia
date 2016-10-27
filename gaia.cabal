@@ -23,10 +23,12 @@ library
                        Math.Gaia.Float,
                        Math.Gaia.Bool,
                        Math.Gaia.Finite,  
-                       Math.Gaia.Category
+                       Math.Gaia.Category,
+                       Math.Gaia.Vector
                        
   build-depends:       base >= 4.7 && < 5,
-                       protolude, 
+                       protolude,
+                       vector, 
                        constraints
   default-language:    Haskell2010
   default-extensions:
@@ -82,6 +84,7 @@ test-suite test
     tasty-smallcheck,
     QuickCheck,
     tasty-quickcheck,
+    vector, 
     gaia
   default-extensions:
     NoImplicitPrelude,
