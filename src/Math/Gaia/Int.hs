@@ -65,6 +65,10 @@ instance Idempotent InfInt
 instance Homomorphic SupInt InfInt where hom (SupInt a) = InfInt (-a)
 instance Homomorphic InfInt SupInt where hom (InfInt a) = SupInt (-a)
 
+
+instance Isomorphic SupInt InfInt where iso = (hom, hom)
+instance Isomorphic InfInt SupInt where iso = (hom, hom)
+
 instance POrd Int where
   pcompare n m = if n > m then PGT else if n == m then PEQ else PLT
 

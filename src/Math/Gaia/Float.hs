@@ -30,6 +30,18 @@ instance Unital MulFloat where
 instance Homomorphic AddFloat AddFloat where
   hom x = x
 
+instance Homomorphic AddFloat MulFloat where
+  hom (AddFloat x) = MulFloat (P.exp x)
+
+instance Homomorphic MulFloat AddFloat where
+  hom (MulFloat x) = AddFloat (P.log x)
+
+instance Isomorphic AddFloat MulFloat where
+  iso = (\(AddFloat x) -> MulFloat (P.exp x), \(MulFloat x) -> AddFloat (P.log x))
+
+instance Isomorphic MulFloat AddFloat where
+  iso = let (a, b) = iso in (b, a)
+
 instance Invertible AddFloat where
   inv (AddFloat a) = AddFloat $ P.negate a
 

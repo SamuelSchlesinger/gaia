@@ -9,6 +9,7 @@ module Math.Gaia
   , Unital(..)
   , Invertible(..)
   , Homomorphic(..)
+  , Isomorphic(..)
   , Semigroup(..)
   , Monoid(..)
   , Group(..)
@@ -68,6 +69,9 @@ instance Invertible a => Invertible (x -> a) where inv f x = inv (f x)
 class (Magma a, Magma b) => Homomorphic a b where hom :: a -> b
 instance Homomorphic a b => Homomorphic (x -> a) (x -> b) where
   hom f x = hom (f x)
+
+class (Magma a, Magma b) => Isomorphic a b where
+  iso :: (a -> b, b -> a)
 
 instance Magma a => Homomorphic a a where hom a = a
 
@@ -164,10 +168,10 @@ class (
   (\/) :: s -> s -> s
   (\/) = coerce (mul :: Inf s -> Inf s -> Inf s)
 
-type Negated s = (Lattice s, Homomorphic (Inf s) (Sup s))
+type Negated s = (Lattice s, Isomorphic (Inf s) (Sup s))
 
 negate :: Negated s => s -> s
-negate (a :: s) = coerce (hom (coerce a :: Inf s) :: Sup s) :: s
+negate (a :: s) = coerce (fst iso (coerce a :: Inf s) :: Sup s) :: s
 
 ord2pord :: Ordering -> POrdering
 ord2pord EQ = PEQ

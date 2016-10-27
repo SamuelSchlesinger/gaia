@@ -48,6 +48,9 @@ instance Homomorphic Or And where hom (Or x) = And (P.not x)
 
 instance Homomorphic And Or where hom (And x) = Or (P.not x)
 
+instance Isomorphic And Or where iso = (hom, hom)
+instance Isomorphic Or And where iso = (hom, hom)
+
 instance POrd Bool where
   pcompare True True = PEQ
   pcompare True False = PGT

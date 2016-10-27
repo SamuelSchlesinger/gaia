@@ -47,6 +47,12 @@ instance IntegralDomain Integer where
 newtype InfInteger = InfInteger Integer
 newtype SupInteger = SupInteger Integer
 
+instance Isomorphic InfInteger SupInteger where
+  iso = (\(InfInteger x) -> SupInteger (P.negate x), \(SupInteger x) -> InfInteger (P.negate x))
+
+instance Isomorphic SupInteger InfInteger where
+  iso = let (a, b) = iso in (b, a)
+
 instance Magma InfInteger where
   InfInteger a `mul` InfInteger b = InfInteger (if a <= b then a else b)
 
