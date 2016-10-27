@@ -15,8 +15,8 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Gaia.Prelude,
-                       Math.Gaia,
+  exposed-modules:     Math.Gaia,
+                       Math.Gaia.Prelude,
                        Math.Gaia.Int,
                        Math.Gaia.Integer,
                        Math.Gaia.Double,
@@ -83,57 +83,6 @@ test-suite test
     QuickCheck,
     tasty-quickcheck,
     gaia
-  default-extensions:
-    NoImplicitPrelude,
-    UnicodeSyntax,
-    BangPatterns,
-    BinaryLiterals,
-    DeriveFoldable,
-    DeriveFunctor,
-    DeriveGeneric,
-    DeriveTraversable,
-    DisambiguateRecordFields,
-    EmptyCase,
-    FlexibleContexts,
-    FlexibleInstances,
-    FunctionalDependencies,
-    GADTSyntax,
-    InstanceSigs,
-    KindSignatures,
-    LambdaCase,
-    MonadComprehensions,
-    MultiParamTypeClasses,
-    MultiWayIf,
-    NegativeLiterals,
-    OverloadedStrings,
-    ParallelListComp,
-    PartialTypeSignatures,
-    PatternSynonyms,
-    RankNTypes,
-    RecordWildCards,
-    RecursiveDo,
-    ScopedTypeVariables,
-    TupleSections,
-    TypeFamilies,
-    TypeOperators
-
-executable gaia-example
-  default-language:
-    Haskell2010
-  ghc-options:
-    -funbox-strict-fields
-    -fforce-recomp
-    -threaded
-    -rtsopts
-    -with-rtsopts=-N
-  hs-source-dirs:
-    examples
-  main-is:
-    example1.lhs
-  build-depends:
-    base >= 4.7 && < 5,
-    gaia,
-    protolude
   default-extensions:
     NoImplicitPrelude,
     UnicodeSyntax,
