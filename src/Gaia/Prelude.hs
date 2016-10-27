@@ -16,6 +16,8 @@ import Protolude as X hiding
     , abs
     , infinity
     , exp
+    , first
+    , second
     )
 
 import Math.Gaia as X hiding
@@ -26,8 +28,14 @@ import Math.Gaia as X hiding
     , Monoid
     )
 
+import Math.Gaia.Int as X
 import Math.Gaia.Integer as X
 import Math.Gaia.Float as X
+import Math.Gaia.Double as X
+-- TODO
+--import Math.Gaia.Vector as X
 import Math.Gaia.Bool as X
 import Math.Gaia.Finite as X
+-- Not fit for consumption by public
+--import Math.Gaia.Category as X
 

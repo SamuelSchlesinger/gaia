@@ -8,7 +8,9 @@ import Test.Tasty (TestName, TestTree, testGroup, defaultMain)
 import Test.Tasty.QuickCheck
 
 import Math.Gaia
+import Math.Gaia.Int()
 import Math.Gaia.Integer()
+import Math.Gaia.Double()
 import Math.Gaia.Float()
 import Math.Gaia.Bool()
 
@@ -32,8 +34,10 @@ testLawOf _ (name, Ornary f) = testProperty name f
 
 tests :: TestTree
 tests = testGroup "everything" $
-    [ testGroup "Integer" $ testLawOf ([]::[Integer]) <$> laws
+    [ testGroup "Int" $ testLawOf ([]::[Int]) <$> laws
+    , testGroup "Integer" $ testLawOf ([]::[Integer]) <$> laws
     , testGroup "Float" $ testLawOf ([]::[Float]) <$> laws'
+    , testGroup "Double" $ testLawOf ([]::[Double]) <$> laws'
     ]
 
 main :: IO ()

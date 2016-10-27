@@ -17,13 +17,17 @@ library
   hs-source-dirs:      src
   exposed-modules:     Gaia.Prelude,
                        Math.Gaia,
+                       Math.Gaia.Int,
                        Math.Gaia.Integer,
+                       Math.Gaia.Double,
                        Math.Gaia.Float,
                        Math.Gaia.Bool,
-                       Math.Gaia.Finite
+                       Math.Gaia.Finite,  
+                       Math.Gaia.Category
                        
   build-depends:       base >= 4.7 && < 5,
-                       protolude
+                       protolude, 
+                       constraints
   default-language:    Haskell2010
   default-extensions:
     NoImplicitPrelude,
