@@ -26,8 +26,12 @@ import Math.Gaia as X hiding
     , Monoid
     )
 
+import Math.Gaia.Int as X
 import Math.Gaia.Integer as X
 import Math.Gaia.Float as X
+import Math.Gaia.Double as X
+import Math.Gaia.Vector as X
 import Math.Gaia.Bool as X
 import Math.Gaia.Finite as X
+import Math.Gaia.Category as X
 
