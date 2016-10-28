@@ -23,7 +23,8 @@ library
                        Math.Gaia.Float,
                        Math.Gaia.Bool,
                        Math.Gaia.Finite,  
-                       Math.Gaia.Category
+                       Math.Gaia.Category,
+                       Math.Gaia.Rational
                        
   build-depends:       base >= 4.7 && < 5,
                        protolude, 
