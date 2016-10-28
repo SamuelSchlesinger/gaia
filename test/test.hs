@@ -38,6 +38,7 @@ tests = testGroup "everything" $
     , testGroup "Integer" $ testLawOf ([]::[Integer]) <$> laws
     , testGroup "Float" $ testLawOf ([]::[Float]) <$> laws'
     , testGroup "Double" $ testLawOf ([]::[Double]) <$> laws'
+    , testGroup "Rational" $ testLawOf ([]::[Double]) <$> laws'
     ]
 
 main :: IO ()
