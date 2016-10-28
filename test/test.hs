@@ -13,6 +13,7 @@ import Math.Gaia.Integer()
 import Math.Gaia.Double()
 import Math.Gaia.Float()
 import Math.Gaia.Bool()
+import Math.Gaia.Rational()
 
 data LawArity a =
     Unary (a -> Bool) |
@@ -38,7 +39,7 @@ tests = testGroup "everything" $
     , testGroup "Integer" $ testLawOf ([]::[Integer]) <$> laws
     , testGroup "Float" $ testLawOf ([]::[Float]) <$> laws'
     , testGroup "Double" $ testLawOf ([]::[Double]) <$> laws'
-    , testGroup "Rational" $ testLawOf ([]::[Double]) <$> laws'
+    , testGroup "Rational" $ testLawOf ([]::[Rational]) <$> laws'
     ]
 
 main :: IO ()
