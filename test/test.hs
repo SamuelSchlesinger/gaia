@@ -35,17 +35,17 @@ testLawOf _ (name, Ornary f) = testProperty name f
 
 tests :: TestTree
 tests = testGroup "everything" $
-    [ testGroup "Int" $ testLawOf ([]::[Int]) <$> laws
-    , testGroup "Integer" $ testLawOf ([]::[Integer]) <$> laws
-    , testGroup "Float" $ testLawOf ([]::[Float]) <$> laws'
-    , testGroup "Double" $ testLawOf ([]::[Double]) <$> laws'
-    , testGroup "Rational" $ testLawOf ([]::[Rational]) <$> laws'
+    [ testGroup "Int" $ testLawOf ([]::[Int]) <$> lawsIntegral
+    , testGroup "Integer" $ testLawOf ([]::[Integer]) <$> lawsIntegral
+    , testGroup "Float" $ testLawOf ([]::[Float]) <$> lawsFloat
+    , testGroup "Double" $ testLawOf ([]::[Double]) <$> lawsFloat
+    , testGroup "Rational" $ testLawOf ([]::[Rational]) <$> lawsRational
     ]
 
 main :: IO ()
 main = defaultMain tests
 
-laws ::
+lawsIntegral ::
     ( Eq a
     , Distributive a
     , Invertible (Add a)
@@ -54,7 +54,7 @@ laws ::
     , Isomorphic (Inf a) (Sup a)
     ) =>
     [Law a]
-laws =
+lawsIntegral =
     [ ("associative: a + (b + c) == (a + b) + c", Ternary (\a b c -> a + (b + c) == (a + b) + c))
     , ("left zero: zero + a = a", Unary (\a -> zero + a == a))
     , ("right zero: a + zero = a", Unary (\a -> a + zero == a))
@@ -74,14 +74,33 @@ laws =
     , ("right inverse: a + negate a == zero", Unary (\a -> a + negate a == zero))
     ]
 
-laws' ::
+lawsFloat ::
     ( Eq a
     , Distributive a
     , Invertible (Add a)
     , Commutative (Add a)
     ) =>
     [Law a]
-laws' =
+lawsFloat =
+    [ ("left zero: zero + a = a", Unary (\a -> zero + a == a))
+    , ("right zero: a + zero = a", Unary (\a -> a + zero == a))
+    , ("left one: one * a == a", Unary (\a -> one * a == a))
+    , ("right one: a * one == a", Unary (\a -> a * one == a))
+    , ("commutative: a + b == b + a", Binary (\a b -> a + b == b + a))
+    , ("commutative: a * b == b * a", Binary (\a b -> a * b == b * a))
+    , ("left annihilative: a * zero == zero", Unary (\a -> a * zero == zero))
+    , ("right annihilative: zero * a == zero", Unary (\a -> zero * a == zero))
+    , ("right minus2: a + (b - b) = a", Binary (\a b -> a + (b - b) == a))
+    ]
+
+lawsRational ::
+    ( Eq a
+    , Distributive a
+    , Invertible (Add a)
+    , Commutative (Add a)
+    ) =>
+    [Law a]
+lawsRational =
     [ ("associative: a + (b + c) == (a + b) + c", Ternary (\a b c -> a + (b + c) == (a + b) + c))
     , ("left zero: zero + a = a", Unary (\a -> zero + a == a))
     , ("right zero: a + zero = a", Unary (\a -> a + zero == a))
