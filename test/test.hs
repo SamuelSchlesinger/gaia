@@ -49,7 +49,7 @@ laws ::
     , Invertible (Add a)
     , Commutative (Add a)
     , Lattice a
-    , Homomorphic (Inf a) (Sup a)
+    , Isomorphic (Inf a) (Sup a)
     ) =>
     [Law a]
 laws =

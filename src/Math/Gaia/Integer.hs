@@ -1,9 +1,16 @@
 {-# LANGUAGE TypeFamilies, MultiParamTypeClasses #-}
 
-module Math.Gaia.Integer where
+module Math.Gaia.Integer 
+  (
+    Integer(..)
+  , AddInteger(..)
+  , MulInteger(..)
+  , lengthZ
+  ) where
 
 import Math.Gaia
 import Protolude (Integer(..), ($), (>), (<), (>=), (<=), (==))
+import Data.Coerce
 import qualified Protolude as P
 
 newtype AddInteger = AddInteger Integer
@@ -11,6 +18,13 @@ newtype MulInteger = MulInteger Integer
 
 instance Homomorphic AddInteger MulInteger where
   hom (AddInteger n) = MulInteger (2 P.^ n)
+
+instance Homomorphic [a] AddInteger where
+  hom [] = AddInteger 0
+  hom (x : xs) = AddInteger 1 `mul` hom xs
+
+lengthZ :: [a] -> Integer
+lengthZ x = coerce $ (hom x :: AddInteger)
 
 instance Magma AddInteger where
   AddInteger a `mul` AddInteger b = AddInteger (a P.+ b)

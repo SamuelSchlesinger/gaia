@@ -50,6 +50,9 @@ import Prelude hiding ((+), (*), (-), (/), exp, negate, Monoid(..), div, mod, (+
 class Magma a where mul :: a -> a -> a
 instance Magma a => Magma (x -> a) where
   (f `mul` g) x = f x `mul` g x
+instance Magma [a] where
+  [] `mul` g = g
+  (x : xs) `mul` g = x : xs `mul` g
 
 class Magma a => Idempotent a
 instance Magma a => Idempotent (x -> a)
@@ -59,9 +62,11 @@ instance Commutative a => Commutative (x -> a)
 
 class Magma a => Associative a
 instance Associative a => Associative (x -> a)
+instance Associative [a]
 
 class Magma a => Unital a where unit :: a
 instance Unital a => Unital (x -> a) where unit _ = unit
+instance Unital [a] where unit = []
 
 class Magma a => Invertible a where inv :: a -> a
 instance Invertible a => Invertible (x -> a) where inv f x = inv (f x)

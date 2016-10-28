@@ -1,6 +1,11 @@
 {-# LANGUAGE TypeFamilies, MultiParamTypeClasses #-}
 
-module Math.Gaia.Float where
+module Math.Gaia.Float 
+  (
+    Float(..)
+  , AddFloat(..)
+  , MulFloat(..)
+  ) where
 
 import Math.Gaia
 import Protolude (Float(..), ($), (>), (<), (>=), (<=), (==))
