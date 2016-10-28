@@ -11,7 +11,7 @@ class Magma a where mul :: a -> a -> a
 class Magma a => Idempotent a
 class Magma a => Commutative a
 class Magma a => Associative a
-class Magma a => Unital a
+class Magma a => Unital a where unit :: a
 class Magma a => Invertible a where inv :: a -> a -> a
 
 ```
